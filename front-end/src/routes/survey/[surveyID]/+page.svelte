@@ -1,18 +1,21 @@
 <script>
-    import {page} from "$app/stores";
-    import {onMount} from "svelte";
+    import { page } from "$app/stores";
+    import { onMount } from "svelte";
+    import { FetchSurveyData } from "./SurveyData.js";
 
     let Survey_res;
+
     onMount(async () => {
         const survey_id = $page.params.surveyID;
-        const response = await fetch(
-            "http://192.168.2.18:8000/survey/api/survey?survey_id=" + survey_id
-        );
-        if (response.ok) {
-            Survey_res = await response.json();
+
+        try {
+            Survey_res = await FetchSurveyData(survey_id);
+        } catch (error) {
+            console.error(error);
         }
     });
 </script>
+
 
 <div class="container">
     {#if Survey_res}

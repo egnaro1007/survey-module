@@ -1,4 +1,1 @@
-<a href="/survey">Survey</a>
-<p></p>
-<p></p>
-<a href="/surveys">All the survey</a>
+<a href="survey">Click here to server</a>
