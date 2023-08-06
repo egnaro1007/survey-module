@@ -3,9 +3,11 @@
     import {onMount} from "svelte";
     import {FetchSurveyData} from "./SurveyData.js";
     import { Circle2 } from 'svelte-loading-spinners';
+    import {submitForm} from "./SubmitButton.js";
 
     let Survey_res;
-    let data= [];
+    let textInput = "";
+    let checked = true;
 
     onMount(async () => {
         const survey_id = $page.params.surveyID;
@@ -27,7 +29,7 @@
                 <h2>{ques.text}</h2>
                 {#if ques.type === "multi"}
 
-                    <ul class="list-unstyled">
+                    <ul class="list-styled">
                         {#each ques.choices as item}
                             <li>
                                 <label>
@@ -40,7 +42,7 @@
 
 
                 {:else if ques.type === "single"}
-                    <ul class="list-unstyled">
+                    <ul class="list-styled">
                         {#each ques.choices as item}
                             <li>
                                 <label>
@@ -51,11 +53,13 @@
                         {/each}
                     </ul>
                 {:else}
-                    <input type="text" name="{ques.id}" class="form-control">
+                    <input type="text" name="{ques.id}" class="form-control" bind:value={textInput} >
                 {/if}
             </li>
         {/each}
-        <input type="submit" class="btn btn-success" placeholder="Submit Form">
+
+        <input type="submit" class="btn btn-success" placeholder="Submit Form" on:click={submitForm(textInput)}>
+
     {:else}
         <div style="position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);">
             <Circle2 size="100" color="#FF3E00" unit="px" duration="5s" />
