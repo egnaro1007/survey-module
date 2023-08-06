@@ -1,9 +1,11 @@
 <script>
-    import { page } from "$app/stores";
-    import { onMount } from "svelte";
-    import { FetchSurveyData } from "./SurveyData.js";
+    import {page} from "$app/stores";
+    import {onMount} from "svelte";
+    import {FetchSurveyData} from "./SurveyData.js";
+    import { Circle2 } from 'svelte-loading-spinners';
 
     let Survey_res;
+    let data= [];
 
     onMount(async () => {
         const survey_id = $page.params.surveyID;
@@ -16,7 +18,6 @@
     });
 </script>
 
-
 <div class="container">
     {#if Survey_res}
         <h1>{Survey_res.title}</h1>
@@ -25,6 +26,7 @@
             <li class="my-3">
                 <h2>{ques.text}</h2>
                 {#if ques.type === "multi"}
+
                     <ul class="list-unstyled">
                         {#each ques.choices as item}
                             <li>
@@ -35,12 +37,14 @@
                             </li>
                         {/each}
                     </ul>
+
+
                 {:else if ques.type === "single"}
                     <ul class="list-unstyled">
                         {#each ques.choices as item}
                             <li>
                                 <label>
-                                    <input type="radio" name="{ques.id}" value="{item.id}" class="mr-2">
+                                    <input type="radio" name="{ques.id}" value="{item.id}" class="mr-2" >
                                     {item.text}
                                 </label>
                             </li>
@@ -51,11 +55,13 @@
                 {/if}
             </li>
         {/each}
+        <input type="submit" class="btn btn-success" placeholder="Submit Form">
     {:else}
-        <p>...waiting</p>
-    {/if}
-    <input type="submit" class="btn btn-success" placeholder="Submit Form" id = "xuanan">
+        <div style="position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);">
+            <Circle2 size="100" color="#FF3E00" unit="px" duration="5s" />
+        </div>
 
+    {/if}
 </div>
 
 <style>
