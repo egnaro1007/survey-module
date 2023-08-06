@@ -3,7 +3,7 @@
   let surveyList = [];
 
   onMount(async () => {
-    const response = await fetch('http://192.168.2.18:8000/survey/api/get_survey_list');
+    const response = await fetch('http://127.0.0.1:8000/survey/api/get_survey_list');
     surveyList = await response.json();
   });
 </script>
