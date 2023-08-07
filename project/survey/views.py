@@ -168,7 +168,7 @@ def api_get_survey_list(request):
 #                 for answer in response_data:
 #                     answer_data = Answer()
 
-#                     answer_data.survey_repsonse_id = get_object_or_404(SurveyResponse, response_id = response_id).id
+#                     answer_data.survey_response_id = get_object_or_404(SurveyResponse, response_id = response_id).id
 #                     answer_data.question_id = answer['question_id']
 #                     answer_data.value = answer['value']
 #                     answer_data.save()
@@ -178,7 +178,7 @@ def api_get_survey_list(request):
 #                 return HttpResponse('Response Invalid')
 
 #         else:
-#             return HttpResponse('This survey is not recieving responses.')
+#             return HttpResponse('This survey is not receiving responses.')
 
 #     else:
 #         return HttpResponse('Response Invalid')
@@ -229,11 +229,11 @@ class SurveyClass(APIView):
             survey_data['questions'] = questions_list
 
             return Response(survey_data, status=status.HTTP_200_OK)
-        return HttpResponse('This survey is not recieving responses.')
+        return HttpResponse('This survey is not receiving responses.')
 
     def post(self, request):
         user = request.user
-        if user.username != None:
+        if user.username is not None:
             uid = user.id
         else:
             uid = ''
@@ -244,7 +244,7 @@ class SurveyClass(APIView):
 
         if Survey.objects.filter(id=survey_id).exists():
             survey = get_object_or_404(Survey, id=survey_id)
-            if survey.active == True:
+            if survey.active:
                 response_id = ''
                 while True:
                     random_string = ''.join((random.choice(string.ascii_lowercase) for x in range(10)))
@@ -267,7 +267,7 @@ class SurveyClass(APIView):
                         response_valid = False
                         break
 
-                if response_valid == True:
+                if response_valid:
                     response.save()
                     for answer in response_data:
                         answer_data = Answer()
@@ -277,14 +277,14 @@ class SurveyClass(APIView):
                         answer_data.value = answer['value']
                         answer_data.save()
 
-                    return Response({'message': 'Response Sucessfull', 'response_id': response_id},
+                    return Response({'message': 'Response Successful', 'response_id': response_id},
                                     status=status.HTTP_201_CREATED)
 
                 else:
                     return Response({'message': 'Response Invalid'}, status=status.HTTP_400_BAD_REQUEST)
 
             else:
-                return Response({'message': 'This survey is not recieving responses.'},
+                return Response({'message': 'This survey is not receiving responses.'},
                                 status=status.HTTP_400_BAD_REQUEST)
 
         else:
