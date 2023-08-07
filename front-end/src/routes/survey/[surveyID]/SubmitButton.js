@@ -1,26 +1,22 @@
 export async function submitForm(formData) {
-    let testJson;
-    console.log(formData)
+    let jsonData;
+    // console.log(formData)
     try {
-        testJson = {
+        jsonData = {
             "survey_id" : "1",
-            "data" :[
-                {
-                    "question_id" : "1",
-                    "value" : formData
-                }
-            ]
+            "data" : formData,
         }
+        console.log(jsonData);
         const response = await fetch("http://127.0.0.1:8000/survey/api/survey", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(testJson),
+            body: JSON.stringify(jsonData),
         });
 
         if (response.ok) {
-            alert("Form submitted successfully!");
+            alert("Submitted");
         } else {
             alert("Failed to submit the form!");
         }
