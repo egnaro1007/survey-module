@@ -22,7 +22,6 @@
     });
 
 
-    let data = [];
     // Init responses array
     let responses = [];
     questions.forEach((ques) => {
@@ -30,10 +29,15 @@
     })
 
     function getSelectedValues(event) {
+        let data = [];
         questions.forEach((ques) => {
             data.push({ question_id: ques.id, value: responses[ques.id] });
         })
-        submitForm(data);
+        let jsonData = {
+            "survey_id" : Survey_res.id,
+            "data" : data,
+        };
+        submitForm(jsonData);
     }
 </script>
 

@@ -3,18 +3,18 @@
     let password = "";
     let response_form_server = "";
     async function submitForm() {
-        let testJson;
+        let jsonData;
         try {
-            testJson = {
+            jsonData = {
                 "username": username,
                 "password": password,
             }
-            const response = await fetch("http://192.168.2.18:8000/login/api/login", {
+            const response = await fetch("http://127.0.0.1:8000/login/api/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(testJson),
+                body: JSON.stringify(jsonData),
             });
 
             if (response.ok) {

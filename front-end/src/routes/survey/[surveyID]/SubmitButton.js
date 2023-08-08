@@ -1,11 +1,10 @@
-export async function submitForm(formData) {
-    let jsonData;
+export async function submitForm(jsonData) {
     // console.log(formData)
     try {
-        jsonData = {
-            "survey_id" : "1",
-            "data" : formData,
-        }
+        // jsonData = {
+        //     "survey_id" : "1",
+        //     "data" : formData,
+        // }
         console.log(jsonData);
         const response = await fetch("http://127.0.0.1:8000/survey/api/survey", {
             method: "POST",

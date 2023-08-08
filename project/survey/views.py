@@ -248,7 +248,7 @@ class SurveyClass(APIView):
                 response_id = ''
                 while True:
                     random_string = ''.join((random.choice(string.ascii_lowercase) for x in range(10)))
-                    response_id = survey_id + '_' + random_string
+                    response_id = str(survey_id) + '_' + random_string
                     if SurveyResponse.objects.filter(response_id=response_id).exists():
                         continue
                     else:
