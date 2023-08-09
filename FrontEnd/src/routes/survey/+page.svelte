@@ -1,14 +1,21 @@
 <script>
     import { onMount } from 'svelte';
+    import {isAuthenticated} from "../../store.ts";
     let surveyList = [];
 
     onMount(async () => {
+        isAuthenticated.set(true);
         const response = await fetch('http://127.0.0.1:8000/survey/api/get_survey_list');
         surveyList = await response.json();
     });
 </script>
 
 <main>
+    {#if isAuthenticated === true}
+        <a href='https://www.google.com' target="_self" class="join-button">Create Survey</a>
+    {:else}
+        <p>Why this won't work</p>
+    {/if}
     <h1>Survey List</h1>
     <ul class="survey-list">
         {#each surveyList as survey}

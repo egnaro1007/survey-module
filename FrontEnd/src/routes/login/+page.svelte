@@ -1,58 +1,24 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
+    import {goto} from '$app/navigation';
+    import {submitForm} from "./submitForm";
+    import {isAuthenticated} from "../../store";
 
 
-    let username = "";
-    let password = "";
-    let response_form_server = {
-        "access_token": "",
-        "access_token_expires": 0,
-        "refresh_token": "",
-        "refresh_expires": 0,
-    };
-
-    async function submitForm() {
-        let jsonData;
-        try {
-            jsonData = {
-                "username": username,
-                "password": password,
-            }
-            const response = await fetch("http://127.0.0.1:8000/login/api/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(jsonData),
-            });
-
-            if (response.ok) {
-                response_form_server = await response.json();
-
-                const accessToken = response_form_server.access_token;
-                const accessTokenExpires = Date.now() + response_form_server.access_token_expires * 1000;
-                localStorage.setItem('access_token', accessToken);
-                localStorage.setItem('access_token_expires', accessTokenExpires.toString());
-
-                const refreshToken = response_form_server.refresh_token;
-                const refreshTokenExpires = Date.now() + response_form_server.refresh_expires * 1000;
-                localStorage.setItem('refresh_token', refreshToken);
-                localStorage.setItem('refresh_token_expires', refreshTokenExpires.toString());
-                username = "";
-                password = "";
-                await goto("/survey");
-
-            } else {
-                alert("Please check your username and password");
-            }
-        } catch (error) {
-            console.error("Error submitting the form:", error);
-            alert("An error occurred while submitting the form.");
-        }
-    }
+    let username: String = "";
+    let password: String = "";
 
     function createAccount() {
         goto("/register");
+    }
+
+    let submitLogin = async () => {
+        let result = await submitForm(username,password);
+        if (result) {
+            goto("/survey");
+            $: isAuthenticated.set(true);
+        } else {
+            alert("Wrong username or password");
+        }
     }
 </script>
 
@@ -91,7 +57,7 @@
 
                     <!-- Submit button -->
                     <button type="submit" class="btn btn-primary btn-lg btn-block"
-                            on:click={submitForm}
+                            on:click={submitLogin}
                     >Sign in
                     </button>
 
@@ -99,7 +65,9 @@
                         <p class="text-center fw-bold mx-3 mb-0 text-muted">Don't have account ? </p>
                     </div>
                 </form>
-                <button type="submit" class="btn btn-secondary btn-sm  btn-block"  on:click={createAccount}>Create account</button>
+                <button type="submit" class="btn btn-secondary btn-sm  btn-block" on:click={createAccount}>Create
+                    account
+                </button>
 
             </div>
         </div>
