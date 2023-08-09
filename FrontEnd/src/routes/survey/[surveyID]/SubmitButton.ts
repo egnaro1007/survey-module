@@ -1,6 +1,5 @@
-export async function submitForm(jsonData: { survey_id: any; data: any[] }) {
+export async function submitForm(jsonData: { survey_id: any; data: any[] }) : Promise<boolean> {
     try {
-        console.log(jsonData);
         const response = await fetch("http://127.0.0.1:8000/survey/api/survey", {
             method: "POST",
             headers: {
@@ -10,12 +9,14 @@ export async function submitForm(jsonData: { survey_id: any; data: any[] }) {
         });
 
         if (response.ok) {
-            alert("Submitted");
+            return true;
         } else {
-            alert("Failed to submit the form!");
+            alert("Please re-submit");
+            return false;
         }
     } catch (error) {
         console.error("Error submitting the form:", error);
         alert("An error occurred while submitting the form.");
+        return false;
     }
 }
