@@ -309,6 +309,19 @@ class CreateSurveyClass(APIView):
 
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class DeleteSurvey(APIView):
+    permission_classes = (IsAuthenticated, CanManageSurvey)
+
+    def delete(self, request):
+        survey_id = request.data['survey_id']
+        survey = Survey.objects.filter(id=survey_id).first()
+        survey_title = survey.title
+        if survey:
+            survey.delete()
+            return Response({'message': 'Deleted', 'survey_id': survey_id, 'survey title': survey_title}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Survey not found'}, status=status.HTTP_404_NOT_FOUND)
+
 
 class AddQuestion(APIView):
     permission_classes = (IsAuthenticated, CanManageSurvey)
