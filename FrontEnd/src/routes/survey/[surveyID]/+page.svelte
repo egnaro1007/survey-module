@@ -1,15 +1,19 @@
-<script lang = "ts">
+<script>
+	import { isAuthenticated } from './../../../store';
     import {page} from "$app/stores";
     import {onMount} from "svelte";
-    import {FetchSurveyData} from "./SurveyData.ts";
-    import { Circle2 } from 'svelte-loading-spinners';
-    import {submitForm} from "./SubmitButton.ts";
+    import {FetchSurveyData} from "./SurveyData";
+    import {Circle2} from 'svelte-loading-spinners';
+    import {submitForm} from "./SubmitButton";
+    import {goto} from "$app/navigation";
 
-    let Survey_res;
+    let Survey_res = {id: 0, title: "", description: "", questions: []};
     let questions = [];
 
+    let responses = [];
+
     onMount(async () => {
-        const survey_id = $page.params.surveyID;
+        let survey_id = $page.params["surveyID"];
 
         try {
             Survey_res = await FetchSurveyData(survey_id);
@@ -21,26 +25,27 @@
     });
 
 
-    let responses = [];
-    questions.forEach((ques) => {
-        responses[ques.id] = null;
-    })
-
-    function getSelectedValues(event) {
+    async function getSelectedValues() {
+        // @ts-ignore
         let data = [];
+        // @ts-ignore
         questions.forEach((ques) => {
-            data.push({ question_id: ques.id, value: responses[ques.id] });
+            data.push({question_id: ques.id, value: responses[ques.id]});
         })
         let jsonData = {
-            "survey_id" : Survey_res.id,
-            "data" : data,
+            "survey_id": Survey_res.id,
+            "data": data,
         };
-        submitForm(jsonData);
+        let submitResult = await submitForm(jsonData);
+        if (submitResult) {
+            isAuthenticated.set(true);
+            goto("/");
+        }
     }
 </script>
 
 <div class="container">
-    {#if Survey_res}
+    {#if (Survey_res.id !== 0)}
         <h1>{Survey_res.title}</h1>
         <p>{Survey_res.description}</p>
         {#each questions as ques}
@@ -52,7 +57,8 @@
                         {#each ques.choices as item}
                             <li>
                                 <label>
-                                    <input type="checkbox" bind:group="{responses[ques.id]}" name="{ques.id}" value="{item.id}" class="mr-2">
+                                    <input type="checkbox" bind:group="{responses[ques.id]}" name="{ques.id}"
+                                           value="{item.id}" class="mr-2">
                                     {item.text}
                                 </label>
                             </li>
@@ -65,7 +71,8 @@
                         {#each ques.choices as item}
                             <li>
                                 <label>
-                                    <input type="radio" bind:group="{responses[ques.id]}" name="{ques.id}" value="{item.id}" class="mr-2" >
+                                    <input type="radio" bind:group="{responses[ques.id]}" name="{ques.id}"
+                                           value="{item.id}" class="mr-2">
                                     {item.text}
                                 </label>
                             </li>
@@ -82,7 +89,7 @@
 
     {:else}
         <div style="position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);">
-            <Circle2 size="100" color="#FF3E00" unit="px" duration="5s" />
+            <Circle2 size="100" color="#FF3E00" unit="px" duration="5s"/>
         </div>
 
     {/if}

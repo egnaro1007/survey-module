@@ -1,7 +1,7 @@
-<script>
+<script lang = "ts">
     import { onMount } from 'svelte';
-    import {isAuthenticated} from "../../store.ts";
-    let surveyList = [];
+    import {isAuthenticated} from "../../store";
+    let surveyList = [] ;
 
     onMount(async () => {
         isAuthenticated.set(true);
@@ -11,11 +11,6 @@
 </script>
 
 <main>
-    {#if isAuthenticated === true}
-        <a href='https://www.google.com' target="_self" class="join-button">Create Survey</a>
-    {:else}
-        <p>Why this won't work</p>
-    {/if}
     <h1>Survey List</h1>
     <ul class="survey-list">
         {#each surveyList as survey}
